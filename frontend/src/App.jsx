@@ -1,42 +1,42 @@
-import { useState } from 'react'
-import { Routes, Route, Navigate, Link } from 'react-router-dom'
-import { useAuth } from './context/AuthContext'
+import { Navigate, Route, Routes, Link } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 
-import ProtectedRoute from './components/ProtectedRoute'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import Dashboard from './pages/Dashboard'
-import Home from './pages/Home'
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyEmail from './pages/VerifyEmail';
+import AdminLogin from './pages/AdminLogin';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const isAdmin = user?.roles?.includes('ROLE_ADMIN');
+  const dashboardPath = isAdmin ? '/admin/dashboard' : '/dashboard';
 
   return (
     <nav className="navbar">
       <Link to="/" className="nav-brand">
-        <div className="nav-brand-icon">L</div>
-        LogSign Secure
+        <div className="nav-brand-icon">E</div>
+        EMS Pro
       </Link>
 
       <div className="nav-links">
+        <Link to="/" className="nav-link">Home</Link>
+        {!user && <Link to="/admin/login" className="nav-link">Admin</Link>}
         {user ? (
           <>
-            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+            <Link to={dashboardPath} className="nav-link">Dashboard</Link>
             <div className="nav-user">
-              <div className="user-avatar">
-                {user.username.charAt(0).toUpperCase()}
-              </div>
-              <button className="btn btn-outline" onClick={logout}>
-                Logout
-              </button>
+              <div className="user-avatar">{user.username.charAt(0).toUpperCase()}</div>
+              <button className="btn btn-outline" onClick={logout}>Logout</button>
             </div>
           </>
         ) : (
           <>
             <Link to="/login" className="nav-link">Login</Link>
-            <Link to="/signup" className="btn btn-primary" style={{ padding: '0.5rem 1rem', width: 'auto' }}>
-              Sign Up
-            </Link>
+            <Link to="/signup" className="btn btn-primary nav-cta">Sign Up</Link>
           </>
         )}
       </div>
@@ -48,7 +48,7 @@ function App() {
   const { loading } = useAuth();
 
   if (loading) {
-    return <div className="main-content">Loading...</div>; // simple loader
+    return <div className="main-content">Loading...</div>;
   }
 
   return (
@@ -62,18 +62,24 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
 
-          {/* Catch all */}
+          <Route element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']} />}>
+            <Route path="/admin/dashboard" element={<Dashboard adminView />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

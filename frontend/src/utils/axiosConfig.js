@@ -28,10 +28,10 @@ instance.interceptors.response.use(
             // Token is invalid/expired - clear storage
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            // A full page redirect is a bit aggressive but ensures secure state, 
-            // though typically handled softly via Context API where possible.
-            if (window.location.pathname !== '/login') {
-                window.location.href = '/login';
+            const onAdminRoute = window.location.pathname.startsWith('/admin');
+            const redirectTo = onAdminRoute ? '/admin/login' : '/login';
+            if (window.location.pathname !== redirectTo) {
+                window.location.href = redirectTo;
             }
         }
         return Promise.reject(error);

@@ -41,10 +41,17 @@ const Signup = () => {
         const result = await register(username, email, password);
 
         if (result.success) {
-            setSuccess('Registration successful! Redirecting to login...');
-            setTimeout(() => {
-                navigate('/login');
-            }, 2000);
+            if (result.requiresEmailVerification && result.verificationToken) {
+                setSuccess('Registration successful! Redirecting to email verification...');
+                setTimeout(() => {
+                    navigate(`/verify-email?token=${encodeURIComponent(result.verificationToken)}`);
+                }, 1200);
+            } else {
+                setSuccess('Registration successful! Redirecting to login...');
+                setTimeout(() => {
+                    navigate('/login');
+                }, 1200);
+            }
         } else {
             setError(result.message);
             setLoading(false);

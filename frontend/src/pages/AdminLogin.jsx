@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const Login = () => {
+const AdminLogin = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { login, user } = useAuth();
+    const { adminLogin } = useAuth();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!user) return;
-        const isAdmin = user.roles?.includes('ROLE_ADMIN');
-        navigate(isAdmin ? '/admin/dashboard' : '/dashboard', { replace: true });
-    }, [navigate, user]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -27,12 +21,9 @@ const Login = () => {
         setLoading(true);
         setError('');
 
-        const result = await login(username, password);
-
+        const result = await adminLogin(username, password);
         if (result.success) {
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-            const isAdmin = storedUser?.roles?.includes('ROLE_ADMIN');
-            navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
+            navigate('/admin/dashboard');
         } else {
             setError(result.message);
         }
@@ -41,24 +32,21 @@ const Login = () => {
 
     return (
         <div className="auth-card glass-panel">
-            <h2 className="auth-title">Welcome Back</h2>
-            <p className="auth-subtitle">Sign in to access your secure dashboard</p>
+            <div className="admin-pill">Admin Console Access</div>
+            <h2 className="auth-title">Admin Login</h2>
+            <p className="auth-subtitle">Sign in with enterprise admin credentials</p>
 
-            {error && (
-                <div className="alert alert-error">
-                    {error}
-                </div>
-            )}
+            {error && <div className="alert alert-error">{error}</div>}
 
             <form onSubmit={handleLogin}>
                 <div className="form-group">
-                    <label className="form-label">Username</label>
+                    <label className="form-label">Admin Username</label>
                     <input
                         type="text"
                         className="form-input"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter your username"
+                        placeholder="Enter admin username"
                         autoComplete="username"
                     />
                 </div>
@@ -70,27 +58,21 @@ const Login = () => {
                         className="form-input"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
+                        placeholder="Enter admin password"
                         autoComplete="current-password"
                     />
                 </div>
 
-                <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={loading}
-                >
-                    {loading ? 'Authenticating...' : 'Sign In'}
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? 'Authenticating...' : 'Sign In as Admin'}
                 </button>
             </form>
 
             <div className="auth-footer">
-                <Link to="/admin/login" className="auth-link">Admin login</Link><br />
-                <Link to="/forgot-password" className="auth-link">Forgot password?</Link><br />
-                Don't have an account? <Link to="/signup" className="auth-link">Sign up</Link>
+                Employee account? <Link className="auth-link" to="/login">Use Employee Login</Link>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default AdminLogin;
