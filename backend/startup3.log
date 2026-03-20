@@ -370,3 +370,12 @@ java.lang.RuntimeException: Error: Role is not found.
 2026-02-20T21:43:54.136+05:30 ERROR 16474 --- [io-8080-exec-10] c.l.b.security.jwt.AuthEntryPointJwt     : Unauthorized error: Full authentication is required to access this resource
 2026-02-20T21:53:58.467+05:30 ERROR 16474 --- [nio-8080-exec-2] c.l.b.security.jwt.AuthEntryPointJwt     : Unauthorized error: Bad credentials
 2026-02-20T21:53:58.469+05:30 ERROR 16474 --- [nio-8080-exec-2] c.l.b.security.jwt.AuthEntryPointJwt     : Unauthorized error: Full authentication is required to access this resource
+2026-02-20T22:04:15.517+05:30  INFO 16474 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-20T22:04:15.523+05:30  INFO 16474 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-20T22:04:15.557+05:30  INFO 16474 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  29:14 min
+[[1;34mINFO[m] Finished at: 2026-02-20T22:04:15+05:30
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
