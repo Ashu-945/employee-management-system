@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const AdminLogin = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ const AdminLogin = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        if (!username || !password) {
+        if (!email || !password) {
             setError('Please fill in all fields');
             return;
         }
@@ -21,7 +21,7 @@ const AdminLogin = () => {
         setLoading(true);
         setError('');
 
-        const result = await adminLogin(username, password);
+        const result = await adminLogin(email, password);
         if (result.success) {
             navigate('/admin/dashboard');
         } else {
@@ -31,47 +31,64 @@ const AdminLogin = () => {
     };
 
     return (
-        <div className="auth-card glass-panel">
-            <div className="admin-pill">Admin Console Access</div>
-            <h2 className="auth-title">Admin Login</h2>
-            <p className="auth-subtitle">Sign in with enterprise admin credentials</p>
+        <section className="auth-shell auth-shell-admin">
+            <div className="auth-stage">
+                <div className="auth-panel auth-panel-form">
+                    <div className="auth-brand">HRMS</div>
+                    <div className="admin-pill">Admin Console Access</div>
+                    <h2 className="auth-title">Admin Login</h2>
+                    <p className="auth-subtitle">Sign in with enterprise admin credentials to control the full HR suite.</p>
 
-            {error && <div className="alert alert-error">{error}</div>}
+                    {error && <div className="alert alert-error">{error}</div>}
 
-            <form onSubmit={handleLogin}>
-                <div className="form-group">
-                    <label className="form-label">Admin Username</label>
-                    <input
-                        type="text"
-                        className="form-input"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter admin username"
-                        autoComplete="username"
-                    />
+                    <form onSubmit={handleLogin} className="auth-form-stack">
+                        <div className="input-icon-row">
+                            <span>@</span>
+                            <input
+                                type="email"
+                                className="form-input"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Admin email"
+                                autoComplete="email"
+                            />
+                        </div>
+
+                        <div className="input-icon-row">
+                            <span>*</span>
+                            <input
+                                type="password"
+                                className="form-input"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Password"
+                                autoComplete="current-password"
+                            />
+                        </div>
+
+                        <button type="submit" className="btn btn-primary auth-submit" disabled={loading}>
+                            {loading ? 'Authenticating...' : 'Sign In as Admin'}
+                        </button>
+                    </form>
+
+                    <div className="auth-footer">
+                        Employee account? <Link className="auth-link" to="/login">Use employee login</Link>
+                    </div>
                 </div>
 
-                <div className="form-group" style={{ marginBottom: '2rem' }}>
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-input"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter admin password"
-                        autoComplete="current-password"
-                    />
+                <div className="auth-panel auth-panel-visual auth-panel-visual-admin">
+                    <div className="admin-visual-stack">
+                        <div className="admin-visual-header"></div>
+                        <div className="admin-visual-grid">
+                            <div className="admin-visual-widget tall"></div>
+                            <div className="admin-visual-widget"></div>
+                            <div className="admin-visual-widget"></div>
+                            <div className="admin-visual-widget wide"></div>
+                        </div>
+                    </div>
                 </div>
-
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? 'Authenticating...' : 'Sign In as Admin'}
-                </button>
-            </form>
-
-            <div className="auth-footer">
-                Employee account? <Link className="auth-link" to="/login">Use Employee Login</Link>
             </div>
-        </div>
+        </section>
     );
 };
 

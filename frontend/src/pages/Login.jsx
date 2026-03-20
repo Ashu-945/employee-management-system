@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        if (!username || !password) {
+        if (!email || !password) {
             setError('Please fill in all fields');
             return;
         }
@@ -27,7 +27,7 @@ const Login = () => {
         setLoading(true);
         setError('');
 
-        const result = await login(username, password);
+        const result = await login(email, password);
 
         if (result.success) {
             const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -40,56 +40,72 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-card glass-panel">
-            <h2 className="auth-title">Welcome Back</h2>
-            <p className="auth-subtitle">Sign in to access your secure dashboard</p>
+        <section className="auth-shell">
+            <div className="auth-stage">
+                <div className="auth-panel auth-panel-form">
+                    <div className="auth-brand">HRMS</div>
+                    <div className="auth-avatar">EM</div>
+                    <div className="auth-tabline">
+                        <span className="auth-tabline-label">Login as:</span>
+                        <strong>User</strong>
+                        <Link to="/admin/login" className="auth-link">Admin</Link>
+                    </div>
+                    <h2 className="auth-title">Sign In</h2>
+                    <p className="auth-subtitle">Access your workforce dashboard with enterprise-grade security.</p>
 
-            {error && (
-                <div className="alert alert-error">
-                    {error}
+                    {error && <div className="alert alert-error">{error}</div>}
+
+                    <form onSubmit={handleLogin} className="auth-form-stack">
+                        <div className="input-icon-row">
+                            <span>@</span>
+                            <input
+                                type="email"
+                                className="form-input"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Email address"
+                                autoComplete="email"
+                            />
+                        </div>
+
+                        <div className="input-icon-row">
+                            <span>*</span>
+                            <input
+                                type="password"
+                                className="form-input"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Password"
+                                autoComplete="current-password"
+                            />
+                        </div>
+
+                        <button type="submit" className="btn btn-primary auth-submit" disabled={loading}>
+                            {loading ? 'Authenticating...' : 'Sign In'}
+                        </button>
+                    </form>
+
+                    <div className="auth-footer">
+                        <Link to="/forgot-password" className="auth-link">Forgot Password?</Link>
+                        <span>New here? <Link to="/signup" className="auth-link">Create account</Link></span>
+                    </div>
                 </div>
-            )}
 
-            <form onSubmit={handleLogin}>
-                <div className="form-group">
-                    <label className="form-label">Username</label>
-                    <input
-                        type="text"
-                        className="form-input"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter your username"
-                        autoComplete="username"
-                    />
+                <div className="auth-panel auth-panel-visual">
+                    <div className="auth-illustration">
+                        <div className="auth-illustration-window">
+                            <div className="auth-illustration-bar"></div>
+                            <div className="auth-illustration-card auth-card-a"></div>
+                            <div className="auth-illustration-card auth-card-b"></div>
+                            <div className="auth-illustration-person auth-person-main"></div>
+                            <div className="auth-illustration-person auth-person-side"></div>
+                        </div>
+                        <div className="auth-gear auth-gear-lg"></div>
+                        <div className="auth-gear auth-gear-sm"></div>
+                    </div>
                 </div>
-
-                <div className="form-group" style={{ marginBottom: '2rem' }}>
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-input"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        autoComplete="current-password"
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={loading}
-                >
-                    {loading ? 'Authenticating...' : 'Sign In'}
-                </button>
-            </form>
-
-            <div className="auth-footer">
-                <Link to="/admin/login" className="auth-link">Admin login</Link><br />
-                <Link to="/forgot-password" className="auth-link">Forgot password?</Link><br />
-                Don't have an account? <Link to="/signup" className="auth-link">Sign up</Link>
             </div>
-        </div>
+        </section>
     );
 };
 
