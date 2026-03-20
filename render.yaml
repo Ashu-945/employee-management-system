@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: employee-management-backend
+    runtime: docker
+    rootDir: backend
+    autoDeploy: true
